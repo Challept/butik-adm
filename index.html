@@ -46,11 +46,11 @@
         img {
             display: none;
             width: 100%;
-            max-width: 400px;
+            height: auto;
+            max-width: 500px;
             margin-top: 2rem;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            transition: transform 0.3s ease;
         }
 
         img.fullscreen {
@@ -62,8 +62,6 @@
             object-fit: contain;
             background: rgba(0, 0, 0, 0.8);
             z-index: 9999;
-            border-radius: 0;
-            box-shadow: none;
         }
     </style>
 </head>
@@ -75,19 +73,26 @@
 
     <script>
         document.getElementById('fetchQR').addEventListener('click', async () => {
-            const response = await fetch('https://challew.pythonanywhere.com/qr'); // Uppdatera med korrekt backend-URL
-            if (response.ok) {
-                const blob = await response.blob();
-                const url = URL.createObjectURL(blob);
+            try {
+                const response = await fetch('https://challew.pythonanywhere.com/qr'); // Backend-URL
+                if (response.ok) {
+                    const blob = await response.blob();
+                    const url = URL.createObjectURL(blob);
 
-                const qrImage = document.getElementById('qrImage');
-                qrImage.src = url;
-                qrImage.style.display = 'block';
-                qrImage.addEventListener('click', () => {
-                    qrImage.classList.toggle('fullscreen');
-                });
-            } else {
-                alert('Kunde inte hämta QR-kod. Försök igen.');
+                    const qrImage = document.getElementById('qrImage');
+                    qrImage.src = url;
+                    qrImage.style.display = 'block';
+
+                    // Visa i fullscreen när användaren klickar på bilden
+                    qrImage.addEventListener('click', () => {
+                        qrImage.classList.toggle('fullscreen');
+                    });
+                } else {
+                    alert('Kunde inte hämta QR-kod. Försök igen.');
+                }
+            } catch (error) {
+                console.error('Ett fel inträffade:', error);
+                alert('Ett fel inträffade när QR-koden skulle hämtas.');
             }
         });
     </script>
